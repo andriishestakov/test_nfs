@@ -1,0 +1,43 @@
+---
+- name: Install packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - nfs-common
+
+- name: Ensure mount dirs exists
+  become: yes
+  file:
+    path: "{{ item.path }}"
+    state: directory
+  with_items: "{{ nfs_mounts }}"
+
+- name: Create systemd mount units
+  become: yes
+  template:
+    src: nfs.mount.j2
+    dest: "/etc/systemd/system/{{ item.path | regex_replace('^/', '') | regex_replace('/', '-') }}.mount"
+  with_items: "{{ nfs_mounts }}"
+
+- name: Create systemd automount units
+  become: yes
+  template:
+    src: nfs.automount.j2
+    dest: "/etc/systemd/system/{{ item.path | regex_replace('^/', '') | regex_replace('/', '-') }}.automount"
+  with_items: "{{ nfs_mounts }}"
+
+- name: Reload systemd daemon
+  become: yes
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start automount
+  become: yes
+  systemd:
+    name: "{{ item.path | regex_replace('^/', '') | regex_replace('/', '-') }}.automount"
+    enabled: yes
+    state: started
+  with_items: "{{ nfs_mounts }}"

@@ -1,0 +1,10 @@
+nfs_clients:
+  hosts:
+    client-01:   
+      ansible_host: 127.0.0.1
+      nfs_mounts:
+        - src: "127.0.0.1:/mnt/data1" # Remote server:path
+          path: /mnt/mount1 # Local mount point
+        - src: "127.0.0.1:/mnt/data2"
+          path: /mnt/mount2
+          options: "rw,sync" # Mount options, overrides default

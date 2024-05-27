@@ -1,0 +1,2 @@
+---
+nfs_client_default_mount_options: "rw,sync"

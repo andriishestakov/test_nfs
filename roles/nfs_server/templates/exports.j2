@@ -1,0 +1,5 @@
+{% for export in nfs_exports %}
+{% set clients = export.clients | default([{"address": "*"}]) %}
+{{ export.path }}{% for client in clients %} {{ client.address }}({{ client.options | default(nfs_server_default_client_options) }}){% endfor %}
+
+{% endfor %}

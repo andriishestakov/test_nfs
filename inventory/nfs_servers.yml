@@ -1,0 +1,10 @@
+nfs_servers:
+  hosts:
+    server-01:   
+      ansible_host: 127.0.0.1
+      nfs_exports:
+        - path: /mnt/data1 # Dir to expose with default mount options
+        - path: /mnt/data2 # Another dir with list of allowed clients
+          clients:
+            - address: 127.0.0.1 # Address of client
+              options: "rw,sync" # Mount options, Overrides default

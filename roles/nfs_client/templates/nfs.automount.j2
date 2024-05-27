@@ -1,0 +1,9 @@
+[Unit]
+Description=Automount NFS {{ item.path }}
+ConditionPathExists={{ item.path }}
+
+[Automount]
+Where={{ item.path }}
+
+[Install]
+WantedBy=multi-user.target
